@@ -1,0 +1,5 @@
+.vs
+*.sln
+OOP_Eindopdracht/bin
+OOP_Eindopdracht/obj
+OOP_Eindopdracht/OOP_EindOpdracht.csproj
