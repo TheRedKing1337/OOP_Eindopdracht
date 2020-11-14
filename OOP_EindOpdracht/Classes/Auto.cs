@@ -44,7 +44,7 @@ namespace OOP_EindOpdracht.Classes
         }
         public abstract decimal BerekenKosten(float km);  
         public override string ToString(){
-            return "ID: " + ID + ", Maker: " + Maker + ", Model: " + Model + ", Bouwjaar: "+Bouwjaar+", Kenteken: "+Kenteken+", Kilometer Telling: "+KilometerTelling+", Is te huur: "+IsTeHuur+", Moet Schoonmaken: "+MoetSchoonmaken;
+            return this.GetType().Name +" ID: " + ID + ", Maker: " + Maker + ", Model: " + Model + ", Bouwjaar: "+Bouwjaar+", Kenteken: "+Kenteken+", Kilometer Telling: "+KilometerTelling+", Is te huur: "+IsTeHuur+", Moet Schoonmaken: "+MoetSchoonmaken;
         }
     }
 }

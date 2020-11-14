@@ -7,32 +7,109 @@ namespace OOP_EindOpdracht.Classes
 {
     class AutoAdministratie
     {
-        private static List<Auto> autos;
-
         private const string connString = "Server=localhost;Database=oop_eindopdracht;uid=root;pwd=";
 
         static AutoAdministratie()
         {
-            //get list from storage here
-
-            autos = new List<Auto>();
         }
 
         public static Truck AddTruck(string maker, string model, int bouwjaar, string kenteken, float kilometerTelling, bool sleepTouw)
         {
-            Truck truck = new Truck(autos.Count, maker, model, bouwjaar, kenteken, kilometerTelling, sleepTouw);
-            autos.Add(truck);
-            return truck;
+            MySqlConnection conn = GetConnection();
+
+            if (conn.State == ConnectionState.Open)
+            {
+                //Insert data into Autos table
+                string query = "INSERT INTO Autos(Maker, Model, Bouwjaar, Kenteken, KilometerTelling, AutoType) VALUES ('"+maker+ "', '" + model + "', " + bouwjaar + ", '" + kenteken + "', " + kilometerTelling + ", " + 0 + ")";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.ExecuteNonQuery();
+
+                //Get ID of the inserted row
+                query = "SELECT LAST_INSERT_ID()";
+                cmd = new MySqlCommand(query, conn);
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                //Cache ID
+                dataReader.Read();
+                int ID = dataReader.GetInt32(0);
+                dataReader.Close();
+
+                //Insert data into Trucks table
+                query = "INSERT INTO Trucks VALUES("+ID +", "+sleepTouw+")";
+                cmd = new MySqlCommand(query, conn);
+                cmd.ExecuteNonQuery();
+
+                conn.Close();
+
+                //Return truck instance
+                Truck truck = new Truck(ID, maker, model, bouwjaar, kenteken, kilometerTelling, sleepTouw);
+                return truck;
+            }
+
+            Console.WriteLine("Failed to add new Truck to database");
+            return null;
         }
         public static Limousine AddLimousine(string maker, string model, int bouwjaar, string kenteken, float kilometerTelling, bool minibar)
         {
-            Limousine limousine = new Limousine(autos.Count, maker, model, bouwjaar, kenteken, kilometerTelling, minibar);
-            autos.Add(limousine);
-            return limousine;
+            MySqlConnection conn = GetConnection();
+
+            if (conn.State == ConnectionState.Open)
+            {
+                //Insert data into Autos table
+                string query = "INSERT INTO Autos(Maker, Model, Bouwjaar, Kenteken, KilometerTelling, AutoType) VALUES ('" + maker + "', '" + model + "', " + bouwjaar + ", '" + kenteken + "', " + kilometerTelling + ", " + 1 + ")";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.ExecuteNonQuery();
+
+                //Get ID of the inserted row
+                query = "SELECT LAST_INSERT_ID()";
+                cmd = new MySqlCommand(query, conn);
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                //Cache ID
+                dataReader.Read();
+                int ID = dataReader.GetInt32(0);
+                dataReader.Close();
+
+                //Insert data into Limousines table
+                query = "INSERT INTO Limousines VALUES(" + ID + ", " + minibar + ")";
+                dataReader.Close();
+                cmd = new MySqlCommand(query, conn);
+                cmd.ExecuteNonQuery();
+
+                conn.Close();
+
+                //return Limousine instance
+                Limousine limousine = new Limousine(ID, maker, model, bouwjaar, kenteken, kilometerTelling, minibar);
+                return limousine;
+            }
+
+            Console.WriteLine("Failed to add new limousine to database");
+            return null;
         }
         public static void RemoveAuto(int id)
         {
-            autos.RemoveAt(id);
+            MySqlConnection conn = GetConnection();
+
+            if (conn.State == ConnectionState.Open)
+            {
+                //Delete record from main table
+                string query = "DELETE FROM Autos where ID = " + id;
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.ExecuteNonQuery();
+
+                //Delete record Trucks table if exists
+                query = "DELETE FROM Trucks where ID = " + id;
+                cmd = new MySqlCommand(query, conn);
+                cmd.ExecuteNonQuery();
+
+                //Delete record Limousines table if exists
+                query = "DELETE FROM Limousines where ID = " + id;
+                cmd = new MySqlCommand(query, conn);
+                cmd.ExecuteNonQuery();
+
+                Console.WriteLine("Auto with id: " + id + " deleted succesfully");
+            }
+            conn.Close();
         }
         public static Auto GetByID(int id)
         {
@@ -45,6 +122,7 @@ namespace OOP_EindOpdracht.Classes
                 MySqlCommand cmd = new MySqlCommand(query, conn);
                 MySqlDataReader dataReader = cmd.ExecuteReader();
 
+                //Check if not empty
                 if (!dataReader.HasRows)
                 {
                     Console.WriteLine("Geen Auto met dat ID in het systeem");
@@ -59,6 +137,7 @@ namespace OOP_EindOpdracht.Classes
 
                 MySqlDataReader dataReaderInherited;
 
+                Auto toReturn;
                 //switch between AutoTypes (Truck 0 and Limousine 1), make new sql query to get their unique properties from their tables in DB, create instance and return it.
                 switch (dataCache[5])
                 {
@@ -69,7 +148,9 @@ namespace OOP_EindOpdracht.Classes
                         dataReaderInherited = cmd.ExecuteReader();
 
                         dataReaderInherited.Read();
-                        return new Truck(id, (string)dataCache[0], (string)dataCache[1], (int)dataCache[2], (string)dataCache[3], (float)dataCache[4], (bool)dataReaderInherited["Sleeptouw"]);
+                        toReturn = new Truck(id, (string)dataCache[0], (string)dataCache[1], (int)dataCache[2], (string)dataCache[3], (float)dataCache[4], (bool)dataReaderInherited["Sleeptouw"]);
+
+                        break;
                     case 1:
                         query = "SELECT Minibar FROM Limousines WHERE ID = " + id;
 
@@ -77,11 +158,15 @@ namespace OOP_EindOpdracht.Classes
                         dataReaderInherited = cmd.ExecuteReader();
 
                         dataReaderInherited.Read();
-                        return new Limousine(id, (string)dataCache[0], (string)dataCache[1], (int)dataCache[2], (string)dataCache[3], (float)dataCache[4], (bool)dataReaderInherited["Minibar"]);
+                        toReturn = new Limousine(id, (string)dataCache[0], (string)dataCache[1], (int)dataCache[2], (string)dataCache[3], (float)dataCache[4], (bool)dataReaderInherited["Minibar"]);
+
+                        break;
                     default:
                         Console.WriteLine("Onbekend auto type");
-                        break;
+                        return null;
                 }
+                conn.Close();
+                return toReturn;
             }
             return null;
         }
@@ -105,6 +190,7 @@ namespace OOP_EindOpdracht.Classes
 
                 while (dataReader.Read())
                 {
+                    //switch between autoTypes, get data from DB, create instance and add to list
                     switch (dataReader["AutoType"])
                     {
                         case 0:
@@ -134,6 +220,7 @@ namespace OOP_EindOpdracht.Classes
                             break;
                     }
                 }
+                conn.Close();
                 return autos.ToArray();
             }
             return null;
