@@ -24,26 +24,32 @@ namespace OOP_EindOpdracht
             //    Console.WriteLine("No autos in Database");
             //}
 
-            Auto auto = AutoAdministratie.GetByID(newTruck.ID);
+           int autoID = AutoAdministratie.GetByID(newTruck.ID).ID;
 
-            Console.WriteLine(auto.ToString());
+            Console.WriteLine(AutoAdministratie.GetByID(autoID));
+            Console.WriteLine("Hiring");
+            Console.ReadLine();
 
-            if (AutoAdministratie.HuurAuto(auto.ID))
+            if (AutoAdministratie.HuurAuto(autoID))
             {
-                Console.WriteLine("Hired ID: " + auto.ID);
+                Console.WriteLine("Hired ID: " + autoID);
             }
             else
             {
-                Console.WriteLine(auto.ID + " was already hired");
+                Console.WriteLine(autoID + " was already hired");
             }
 
-            Console.WriteLine(auto.ToString());
+            Console.WriteLine(AutoAdministratie.GetByID(autoID));
+            Console.WriteLine("Inleveren");
+            Console.ReadLine();
 
-            Console.WriteLine("Costs are: " + AutoAdministratie.LeverIn(auto.ID, 50));
+            Console.WriteLine("Ingeleverd! Costs are: " + AutoAdministratie.LeverIn(autoID, 50));
 
-            Console.WriteLine(auto.ToString());
+            Console.WriteLine(AutoAdministratie.GetByID(autoID));
+            Console.WriteLine("Cleaning");
+            Console.ReadLine();
 
-            if (AutoAdministratie.MaakSchoon(auto.ID))
+            if (AutoAdministratie.MaakSchoon(autoID))
             {
                 Console.WriteLine("Car cleaned and set for hire");
             }
@@ -52,9 +58,11 @@ namespace OOP_EindOpdracht
                 Console.WriteLine("Car was already cleaned");
             }
 
-            Console.WriteLine(auto.ToString());
+            Console.WriteLine(AutoAdministratie.GetByID(autoID));
+            Console.WriteLine("Deleting");
+            Console.ReadLine();
 
-            AutoAdministratie.RemoveAuto(auto.ID);
+            AutoAdministratie.RemoveAuto(autoID);
         }
     }
 }
