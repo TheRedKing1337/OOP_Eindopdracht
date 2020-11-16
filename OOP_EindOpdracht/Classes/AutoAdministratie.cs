@@ -5,13 +5,9 @@ using MySql.Data.MySqlClient;
 
 namespace OOP_EindOpdracht.Classes
 {
-    class AutoAdministratie
+    static class AutoAdministratie
     {
         private const string connString = "Server=localhost;Database=oop_eindopdracht;uid=root;pwd=";
-
-        static AutoAdministratie()
-        {
-        }
 
         public static Truck AddTruck(string maker, string model, int bouwjaar, string kenteken, float kilometerTelling, bool sleepTouw)
         {
@@ -20,7 +16,7 @@ namespace OOP_EindOpdracht.Classes
             if (conn.State == ConnectionState.Open)
             {
                 //Insert data into Autos table
-                string query = "INSERT INTO Autos(Maker, Model, Bouwjaar, Kenteken, KilometerTelling, AutoType) VALUES ('"+maker+ "', '" + model + "', " + bouwjaar + ", '" + kenteken + "', " + kilometerTelling + ", " + 0 + ")";
+                string query = "INSERT INTO Autos(Maker, Model, Bouwjaar, Kenteken, KilometerTelling, AutoType) VALUES ('" + maker + "', '" + model + "', " + bouwjaar + ", '" + kenteken + "', " + kilometerTelling + ", " + 0 + ")";
                 MySqlCommand cmd = new MySqlCommand(query, conn);
                 cmd.ExecuteNonQuery();
 
@@ -35,14 +31,14 @@ namespace OOP_EindOpdracht.Classes
                 dataReader.Close();
 
                 //Insert data into Trucks table
-                query = "INSERT INTO Trucks VALUES("+ID +", "+sleepTouw+")";
+                query = "INSERT INTO Trucks VALUES(" + ID + ", " + sleepTouw + ")";
                 cmd = new MySqlCommand(query, conn);
                 cmd.ExecuteNonQuery();
 
                 conn.Close();
 
                 //Return truck instance
-                Truck truck = new Truck(ID, maker, model, bouwjaar, kenteken, kilometerTelling, sleepTouw);
+                Truck truck = new Truck(ID, maker, model, bouwjaar, kenteken, false, kilometerTelling, true, sleepTouw);
                 return truck;
             }
 
@@ -79,7 +75,7 @@ namespace OOP_EindOpdracht.Classes
                 conn.Close();
 
                 //return Limousine instance
-                Limousine limousine = new Limousine(ID, maker, model, bouwjaar, kenteken, kilometerTelling, minibar);
+                Limousine limousine = new Limousine(ID, maker, model, bouwjaar, kenteken, false, kilometerTelling, true, minibar);
                 return limousine;
             }
 
@@ -117,7 +113,7 @@ namespace OOP_EindOpdracht.Classes
 
             if (conn.State == ConnectionState.Open)
             {
-                string query = "SELECT Maker, Model, Bouwjaar, Kenteken, Kilometertelling, AutoType FROM Autos WHERE ID = " + id;
+                string query = "SELECT Maker, Model, Bouwjaar, Kenteken, MoetSchoonmaken, Kilometertelling, IsTeHuur, AutoType FROM Autos WHERE ID = " + id;
 
                 MySqlCommand cmd = new MySqlCommand(query, conn);
                 MySqlDataReader dataReader = cmd.ExecuteReader();
@@ -130,7 +126,7 @@ namespace OOP_EindOpdracht.Classes
                 }
 
                 //cache data from dataReader and close it because you cant have 2 active at once
-                object[] dataCache = new object[6];
+                object[] dataCache = new object[8];
                 dataReader.Read();
                 dataReader.GetValues(dataCache);
                 dataReader.Close();
@@ -139,7 +135,7 @@ namespace OOP_EindOpdracht.Classes
 
                 Auto toReturn;
                 //switch between AutoTypes (Truck 0 and Limousine 1), make new sql query to get their unique properties from their tables in DB, create instance and return it.
-                switch (dataCache[5])
+                switch (dataCache[7])
                 {
                     case 0:
                         query = "SELECT Sleeptouw FROM Trucks where ID = " + id;
@@ -148,7 +144,7 @@ namespace OOP_EindOpdracht.Classes
                         dataReaderInherited = cmd.ExecuteReader();
 
                         dataReaderInherited.Read();
-                        toReturn = new Truck(id, (string)dataCache[0], (string)dataCache[1], (int)dataCache[2], (string)dataCache[3], (float)dataCache[4], (bool)dataReaderInherited["Sleeptouw"]);
+                        toReturn = new Truck(id, (string)dataCache[0], (string)dataCache[1], (int)dataCache[2], (string)dataCache[3], (bool)dataCache[4], (float)dataCache[5], (bool)dataCache[6], (bool)dataReaderInherited["Sleeptouw"]);
 
                         break;
                     case 1:
@@ -158,7 +154,7 @@ namespace OOP_EindOpdracht.Classes
                         dataReaderInherited = cmd.ExecuteReader();
 
                         dataReaderInherited.Read();
-                        toReturn = new Limousine(id, (string)dataCache[0], (string)dataCache[1], (int)dataCache[2], (string)dataCache[3], (float)dataCache[4], (bool)dataReaderInherited["Minibar"]);
+                        toReturn = new Limousine(id, (string)dataCache[0], (string)dataCache[1], (int)dataCache[2], (string)dataCache[3], (bool)dataCache[4], (float)dataCache[5], (bool)dataCache[6], (bool)dataReaderInherited["Minibar"]);
 
                         break;
                     default:
@@ -178,7 +174,7 @@ namespace OOP_EindOpdracht.Classes
 
             if (conn.State == ConnectionState.Open)
             {
-                string query = "SELECT ID, Maker, Model, Bouwjaar, Kenteken, Kilometertelling, AutoType FROM Autos";
+                string query = "SELECT ID, Maker, Model, Bouwjaar, Kenteken, MoetSchoonmaken, Kilometertelling, IsTeHuur, AutoType FROM Autos";
 
                 MySqlCommand cmd = new MySqlCommand(query, conn);
                 MySqlDataReader dataReader = cmd.ExecuteReader();
@@ -200,7 +196,7 @@ namespace OOP_EindOpdracht.Classes
                             dataReaderInherited = cmd2.ExecuteReader();
 
                             dataReaderInherited.Read();
-                            autos.Add(new Truck((int)dataReader["ID"], (string)dataReader["Maker"], (string)dataReader["Model"], (int)dataReader["Bouwjaar"], (string)dataReader["Kenteken"], (float)dataReader["KilometerTelling"], (bool)dataReaderInherited["Sleeptouw"]));
+                            autos.Add(new Truck((int)dataReader["ID"], (string)dataReader["Maker"], (string)dataReader["Model"], (int)dataReader["Bouwjaar"], (string)dataReader["Kenteken"], (bool)dataReader["MoetSchoonmaken"], (float)dataReader["KilometerTelling"], (bool)dataReader["IsTeHuur"], (bool)dataReaderInherited["Sleeptouw"]));
 
                             dataReaderInherited.Close();
                             break;
@@ -211,7 +207,7 @@ namespace OOP_EindOpdracht.Classes
                             dataReaderInherited = cmd2.ExecuteReader();
 
                             dataReaderInherited.Read();
-                            autos.Add(new Limousine((int)dataReader["ID"], (string)dataReader["Maker"], (string)dataReader["Model"], (int)dataReader["Bouwjaar"], (string)dataReader["Kenteken"], (float)dataReader["KilometerTelling"], (bool)dataReaderInherited["Minibar"]));
+                            autos.Add(new Limousine((int)dataReader["ID"], (string)dataReader["Maker"], (string)dataReader["Model"], (int)dataReader["Bouwjaar"], (string)dataReader["Kenteken"], (bool)dataReader["MoetSchoonmaken"], (float)dataReader["KilometerTelling"], (bool)dataReader["IsTeHuur"], (bool)dataReaderInherited["Minibar"]));
 
                             dataReaderInherited.Close();
                             break;
@@ -227,6 +223,18 @@ namespace OOP_EindOpdracht.Classes
         }
 
         #region Database functions
+        public static void UpdateDB(Auto auto)
+        {
+            MySqlConnection conn = GetConnection();
+
+            if (conn.State == ConnectionState.Open)
+            {
+                string query = "UPDATE Autos SET Maker = '" + auto.Maker + "', Model = '" + auto.Model + "', Bouwjaar = " + auto.Bouwjaar + ", Kenteken = '" + auto.Kenteken + "', MoetSchoonmaken = " + auto.MoetSchoonmaken + ", KilometerTelling = " + auto.KilometerTelling + ", IsTeHuur = " + auto.IsTeHuur + " WHERE ID = " + auto.ID;
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.ExecuteNonQuery();
+            }
+        }
         private static MySqlConnection GetConnection()
         {
             MySqlConnection conn = new MySqlConnection(connString);

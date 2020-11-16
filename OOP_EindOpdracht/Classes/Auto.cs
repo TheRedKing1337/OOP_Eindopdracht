@@ -15,36 +15,56 @@ namespace OOP_EindOpdracht.Classes
         public float KilometerTelling { get; private set; }
         public bool IsTeHuur { get; private set; } = true;
 
-        public Auto(int id, string maker, string model, int bouwjaar, string kenteken, float kilometerTelling) {
+        public Auto(int id, string maker, string model, int bouwjaar, string kenteken, bool moetSchoonmaken, float kilometerTelling, bool isTeHuur)
+        {
             ID = id;
             Maker = maker;
             Model = model;
             Bouwjaar = bouwjaar;
             Kenteken = kenteken;
+            MoetSchoonmaken = moetSchoonmaken;
             KilometerTelling = kilometerTelling;
+            IsTeHuur = isTeHuur;
         }
         //functions
-        public bool Huur(){
+        public bool Huur()
+        {
             if (IsTeHuur)
             {
                 IsTeHuur = false;
+                AutoAdministratie.UpdateDB(this);
                 return true;
-            } else {
+            }
+            else
+            {
                 return false;
             }
         }
-        public decimal LeverIn(float km){
+        public decimal LeverIn(float km)
+        {
             KilometerTelling += km;
             MoetSchoonmaken = true;
+            AutoAdministratie.UpdateDB(this);
             return BerekenKosten(km);
         }
-        public void Schoonmaak(){
-            MoetSchoonmaken = false;
-            IsTeHuur = true;
+        public bool Schoonmaak()
+        {
+            if (MoetSchoonmaken)
+            {
+                MoetSchoonmaken = false;
+                IsTeHuur = true;
+                AutoAdministratie.UpdateDB(this);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
-        public abstract decimal BerekenKosten(float km);  
-        public override string ToString(){
-            return this.GetType().Name +" ID: " + ID + ", Maker: " + Maker + ", Model: " + Model + ", Bouwjaar: "+Bouwjaar+", Kenteken: "+Kenteken+", Kilometer Telling: "+KilometerTelling+", Is te huur: "+IsTeHuur+", Moet Schoonmaken: "+MoetSchoonmaken;
+        protected abstract decimal BerekenKosten(float km);
+        public override string ToString()
+        {
+            return this.GetType().Name + " ID: " + ID + ", Maker: " + Maker + ", Model: " + Model + ", Bouwjaar: " + Bouwjaar + ", Kenteken: " + Kenteken + ", Kilometer Telling: " + KilometerTelling + ", Is te huur: " + IsTeHuur + ", Moet Schoonmaken: " + MoetSchoonmaken;
         }
     }
 }

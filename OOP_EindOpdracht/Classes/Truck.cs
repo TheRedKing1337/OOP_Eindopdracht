@@ -8,11 +8,11 @@ namespace OOP_EindOpdracht.Classes
     {
         public bool SleepTouw { get; private set; }
 
-        public Truck(int id, string maker, string model, int bouwjaar, string kenteken, float kilometerTelling, bool sleepTouw):base(id, maker, model,bouwjaar,kenteken,kilometerTelling){
+        public Truck(int id, string maker, string model, int bouwjaar, string kenteken, bool moetSchoonmaken, float kilometerTelling, bool isTeHuur, bool sleepTouw):base(id, maker, model,bouwjaar,kenteken,moetSchoonmaken, kilometerTelling,isTeHuur){
             this.SleepTouw = sleepTouw;
         }
 
-        public override decimal BerekenKosten(float km)
+        protected override decimal BerekenKosten(float km)
         {
             float kosten = 950 + 0.15f * km;
             if (SleepTouw) kosten += 50;

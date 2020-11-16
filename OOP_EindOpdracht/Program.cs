@@ -12,17 +12,48 @@ namespace OOP_EindOpdracht
 
             Auto[] autos = AutoAdministratie.GetAllAutos();
 
-            if (autos != null)
+            //if (autos != null)
+            //{
+            //    for (int i = 0; i < autos.Length; i++)
+            //    {
+            //        Console.WriteLine(autos[i].ToString());
+            //    }
+            //}
+            //else
+            //{
+            //    Console.WriteLine("No autos in Database");
+            //}
+
+            Auto auto = AutoAdministratie.GetByID(autos[0].ID);
+            Console.WriteLine(auto.ToString());
+
+            if (auto.Huur())
             {
-                for (int i = 0; i < autos.Length; i++)
-                {
-                    Console.WriteLine(autos[i].ToString());
-                }
+                Console.WriteLine("Hired ID: " + auto.ID);
             }
             else
             {
-                Console.WriteLine("No autos in Database");
+                Console.WriteLine(auto.ID + " was already hired");
             }
+
+            Console.WriteLine(auto.ToString());
+
+            Console.WriteLine("Costs are: " + auto.LeverIn(50));
+
+            Console.WriteLine(auto.ToString());
+
+            if (auto.Schoonmaak())
+            {
+                Console.WriteLine("Car cleaned and set for hire");
+            }
+            else
+            {
+                Console.WriteLine("Car was already cleaned");
+            }
+
+            Console.WriteLine(auto.ToString());
+
+            //AutoAdministratie.RemoveAuto(auto.ID);
         }
     }
 }
