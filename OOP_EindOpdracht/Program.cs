@@ -6,8 +6,7 @@ namespace OOP_EindOpdracht
     class Program
     {
         static void Main(string[] args)
-        {
-            Truck newTruck = AutoAdministratie.AddTruck("Volvo","Truck7",2001,"72-NS-HH",0,true);
+        {          
             //Limousine newLimo = AutoAdministratie.AddLimousine("Volvo", "Truck7", 2001, "72-NS-HH", 0, true);
 
             //Auto[] autos = AutoAdministratie.GetAllAutos();
@@ -23,33 +22,35 @@ namespace OOP_EindOpdracht
             //{
             //    Console.WriteLine("No autos in Database");
             //}
+            Console.WriteLine("Press enter to create new Truck");
+            Console.ReadLine();
 
-            int autoID = AutoAdministratie.GetByID(newTruck.ID).ID;
+            Truck newTruck = AutoAdministratie.AddTruck("Volvo", "Truck7", 2001, "72-NS-HH", 0, true);
 
-            Console.WriteLine(AutoAdministratie.GetByID(autoID));
+            Console.WriteLine(AutoAdministratie.GetByID(newTruck.ID));
             Console.WriteLine("Press enter to hire");
             Console.ReadLine();
 
-            if (AutoAdministratie.HuurAuto(autoID))
+            if (AutoAdministratie.HuurAuto(newTruck.ID))
             {
-                Console.WriteLine("Hired ID: " + autoID);
+                Console.WriteLine("Hired ID: " + newTruck.ID);
             }
             else
             {
-                Console.WriteLine(autoID + " was already hired");
+                Console.WriteLine(newTruck.ID + " was already hired");
             }
 
-            Console.WriteLine(AutoAdministratie.GetByID(autoID));
+            Console.WriteLine(AutoAdministratie.GetByID(newTruck.ID));
             Console.WriteLine("Press enter to get costs");
             Console.ReadLine();
 
-            Console.WriteLine("Ingeleverd! Costs are: " + AutoAdministratie.LeverIn(autoID, 50));
+            Console.WriteLine("Ingeleverd! Costs are: " + AutoAdministratie.LeverIn(newTruck.ID, 50));
 
-            Console.WriteLine(AutoAdministratie.GetByID(autoID));
+            Console.WriteLine(AutoAdministratie.GetByID(newTruck.ID));
             Console.WriteLine("Press enter to clean");
             Console.ReadLine();
 
-            if (AutoAdministratie.MaakSchoon(autoID))
+            if (AutoAdministratie.MaakSchoon(newTruck.ID))
             {
                 Console.WriteLine("Car cleaned and set for hire");
             }
@@ -58,11 +59,11 @@ namespace OOP_EindOpdracht
                 Console.WriteLine("Car was already cleaned");
             }
 
-            Console.WriteLine(AutoAdministratie.GetByID(autoID));
+            Console.WriteLine(AutoAdministratie.GetByID(newTruck.ID));
             Console.WriteLine("Press enter to delete");
             Console.ReadLine();
 
-            AutoAdministratie.RemoveAuto(autoID);
+            AutoAdministratie.RemoveAuto(newTruck.ID);
         }
     }
 }
