@@ -28,7 +28,7 @@ namespace OOP_EindOpdracht
 
             Console.WriteLine(auto.ToString());
 
-            if (AutoAdministratie.HuurAuto(auto.ID)
+            if (AutoAdministratie.HuurAuto(auto.ID))
             {
                 Console.WriteLine("Hired ID: " + auto.ID);
             }

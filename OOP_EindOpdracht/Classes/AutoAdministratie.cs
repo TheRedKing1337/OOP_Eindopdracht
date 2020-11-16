@@ -266,7 +266,7 @@ namespace OOP_EindOpdracht.Classes
         #endregion
 
         #region Database functions
-        public static void UpdateDB(Auto auto)
+        private static void UpdateDB(Auto auto)
         {
             MySqlConnection conn = GetConnection();
 

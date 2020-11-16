@@ -8,7 +8,8 @@ namespace OOP_EindOpdracht.Classes
     {
         public bool SleepTouw { get; private set; }
 
-        public Truck(int id, string maker, string model, int bouwjaar, string kenteken, bool moetSchoonmaken, float kilometerTelling, bool isTeHuur, bool sleepTouw):base(id, maker, model,bouwjaar,kenteken,moetSchoonmaken, kilometerTelling,isTeHuur){
+        public Truck(int id, string maker, string model, int bouwjaar, string kenteken, bool moetSchoonmaken, float kilometerTelling, bool isTeHuur, bool sleepTouw) : base(id, maker, model, bouwjaar, kenteken, moetSchoonmaken, kilometerTelling, isTeHuur)
+        {
             this.SleepTouw = sleepTouw;
         }
 
@@ -20,7 +21,7 @@ namespace OOP_EindOpdracht.Classes
         }
         public override string ToString()
         {
-            return base.ToString() + ", Heeft Sleeptouw: "+SleepTouw;
+            return base.ToString() + ", Heeft Sleeptouw: " + SleepTouw;
         }
     }
 }
