@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿
 namespace OOP_EindOpdracht.Classes
 {
     abstract class Auto

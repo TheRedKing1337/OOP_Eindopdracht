@@ -10,7 +10,7 @@ namespace OOP_EindOpdracht
             Truck newTruck = AutoAdministratie.AddTruck("Volvo","Truck7",2001,"72-NS-HH",0,true);
             //Limousine newLimo = AutoAdministratie.AddLimousine("Volvo", "Truck7", 2001, "72-NS-HH", 0, true);
 
-            Auto[] autos = AutoAdministratie.GetAllAutos();
+            //Auto[] autos = AutoAdministratie.GetAllAutos();
 
             //if (autos != null)
             //{
@@ -24,10 +24,10 @@ namespace OOP_EindOpdracht
             //    Console.WriteLine("No autos in Database");
             //}
 
-           int autoID = AutoAdministratie.GetByID(newTruck.ID).ID;
+            int autoID = AutoAdministratie.GetByID(newTruck.ID).ID;
 
             Console.WriteLine(AutoAdministratie.GetByID(autoID));
-            Console.WriteLine("Hiring");
+            Console.WriteLine("Press enter to hire");
             Console.ReadLine();
 
             if (AutoAdministratie.HuurAuto(autoID))
@@ -40,13 +40,13 @@ namespace OOP_EindOpdracht
             }
 
             Console.WriteLine(AutoAdministratie.GetByID(autoID));
-            Console.WriteLine("Inleveren");
+            Console.WriteLine("Press enter to get costs");
             Console.ReadLine();
 
             Console.WriteLine("Ingeleverd! Costs are: " + AutoAdministratie.LeverIn(autoID, 50));
 
             Console.WriteLine(AutoAdministratie.GetByID(autoID));
-            Console.WriteLine("Cleaning");
+            Console.WriteLine("Press enter to clean");
             Console.ReadLine();
 
             if (AutoAdministratie.MaakSchoon(autoID))
@@ -59,7 +59,7 @@ namespace OOP_EindOpdracht
             }
 
             Console.WriteLine(AutoAdministratie.GetByID(autoID));
-            Console.WriteLine("Deleting");
+            Console.WriteLine("Press enter to delete");
             Console.ReadLine();
 
             AutoAdministratie.RemoveAuto(autoID);
