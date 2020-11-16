@@ -7,7 +7,7 @@ namespace OOP_EindOpdracht
     {
         static void Main(string[] args)
         {
-            //Truck newTruck = AutoAdministratie.AddTruck("Volvo","Truck7",2001,"72-NS-HH",0,true);
+            Truck newTruck = AutoAdministratie.AddTruck("Volvo","Truck7",2001,"72-NS-HH",0,true);
             //Limousine newLimo = AutoAdministratie.AddLimousine("Volvo", "Truck7", 2001, "72-NS-HH", 0, true);
 
             Auto[] autos = AutoAdministratie.GetAllAutos();
@@ -24,10 +24,11 @@ namespace OOP_EindOpdracht
             //    Console.WriteLine("No autos in Database");
             //}
 
-            Auto auto = AutoAdministratie.GetByID(autos[0].ID);
+            Auto auto = AutoAdministratie.GetByID(newTruck.ID);
+
             Console.WriteLine(auto.ToString());
 
-            if (auto.Huur())
+            if (AutoAdministratie.HuurAuto(auto.ID)
             {
                 Console.WriteLine("Hired ID: " + auto.ID);
             }
@@ -38,11 +39,11 @@ namespace OOP_EindOpdracht
 
             Console.WriteLine(auto.ToString());
 
-            Console.WriteLine("Costs are: " + auto.LeverIn(50));
+            Console.WriteLine("Costs are: " + AutoAdministratie.LeverIn(auto.ID, 50));
 
             Console.WriteLine(auto.ToString());
 
-            if (auto.Schoonmaak())
+            if (AutoAdministratie.MaakSchoon(auto.ID))
             {
                 Console.WriteLine("Car cleaned and set for hire");
             }
@@ -53,7 +54,7 @@ namespace OOP_EindOpdracht
 
             Console.WriteLine(auto.ToString());
 
-            //AutoAdministratie.RemoveAuto(auto.ID);
+            AutoAdministratie.RemoveAuto(auto.ID);
         }
     }
 }

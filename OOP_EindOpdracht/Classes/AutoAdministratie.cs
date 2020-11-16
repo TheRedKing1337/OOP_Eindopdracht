@@ -9,6 +9,7 @@ namespace OOP_EindOpdracht.Classes
     {
         private const string connString = "Server=localhost;Database=oop_eindopdracht;uid=root;pwd=";
 
+        #region Create/Get functions
         public static Truck AddTruck(string maker, string model, int bouwjaar, string kenteken, float kilometerTelling, bool sleepTouw)
         {
             MySqlConnection conn = GetConnection();
@@ -81,32 +82,7 @@ namespace OOP_EindOpdracht.Classes
 
             Console.WriteLine("Failed to add new limousine to database");
             return null;
-        }
-        public static void RemoveAuto(int id)
-        {
-            MySqlConnection conn = GetConnection();
-
-            if (conn.State == ConnectionState.Open)
-            {
-                //Delete record from main table
-                string query = "DELETE FROM Autos where ID = " + id;
-                MySqlCommand cmd = new MySqlCommand(query, conn);
-                cmd.ExecuteNonQuery();
-
-                //Delete record Trucks table if exists
-                query = "DELETE FROM Trucks where ID = " + id;
-                cmd = new MySqlCommand(query, conn);
-                cmd.ExecuteNonQuery();
-
-                //Delete record Limousines table if exists
-                query = "DELETE FROM Limousines where ID = " + id;
-                cmd = new MySqlCommand(query, conn);
-                cmd.ExecuteNonQuery();
-
-                Console.WriteLine("Auto with id: " + id + " deleted succesfully");
-            }
-            conn.Close();
-        }
+        }       
         public static Auto GetByID(int id)
         {
             MySqlConnection conn = GetConnection();
@@ -221,6 +197,73 @@ namespace OOP_EindOpdracht.Classes
             }
             return null;
         }
+        #endregion
+
+        #region Action functions
+        public static bool HuurAuto(int id)
+        {
+            Auto auto = GetByID(id);
+            if (auto.IsTeHuur)
+            {
+                auto.IsTeHuur = false;
+                UpdateDB(auto);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public static bool MaakSchoon(int id){
+            Auto auto = GetByID(id);
+
+            if (auto.MoetSchoonmaken)
+            {
+                auto.MoetSchoonmaken = false;
+                auto.IsTeHuur = true;
+                AutoAdministratie.UpdateDB(auto);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public static decimal LeverIn(int id, float km)
+        {
+            Auto auto = GetByID(id);
+
+            auto.KilometerTelling += km;
+            auto.MoetSchoonmaken = true;
+            UpdateDB(auto);
+            return auto.BerekenKosten(km);
+        }
+        public static void RemoveAuto(int id)
+        {
+            MySqlConnection conn = GetConnection();
+
+            if (conn.State == ConnectionState.Open)
+            {
+                //Delete record from main table
+                string query = "DELETE FROM Autos where ID = " + id;
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.ExecuteNonQuery();
+
+                //Delete record Trucks table if exists
+                query = "DELETE FROM Trucks where ID = " + id;
+                cmd = new MySqlCommand(query, conn);
+                cmd.ExecuteNonQuery();
+
+                //Delete record Limousines table if exists
+                query = "DELETE FROM Limousines where ID = " + id;
+                cmd = new MySqlCommand(query, conn);
+                cmd.ExecuteNonQuery();
+
+                Console.WriteLine("Auto with id: " + id + " deleted succesfully");
+            }
+            conn.Close();
+        }
+        #endregion
 
         #region Database functions
         public static void UpdateDB(Auto auto)

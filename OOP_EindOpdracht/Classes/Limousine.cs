@@ -13,7 +13,7 @@ namespace OOP_EindOpdracht.Classes
             this.Minibar = minibar;
         }
 
-        protected override decimal BerekenKosten(float km)
+        public override decimal BerekenKosten(float km)
         {
             float kosten = 450 + 3 * km;
             if (Minibar) kosten += 65;

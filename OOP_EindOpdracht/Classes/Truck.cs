@@ -12,7 +12,7 @@ namespace OOP_EindOpdracht.Classes
             this.SleepTouw = sleepTouw;
         }
 
-        protected override decimal BerekenKosten(float km)
+        public override decimal BerekenKosten(float km)
         {
             float kosten = 950 + 0.15f * km;
             if (SleepTouw) kosten += 50;
