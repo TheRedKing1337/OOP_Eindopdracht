@@ -1,5 +1,4 @@
-﻿
-namespace OOP_EindOpdracht.Classes
+﻿namespace OOP_EindOpdracht.Classes
 {
     abstract class Auto
     {

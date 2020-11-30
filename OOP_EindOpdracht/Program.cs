@@ -6,8 +6,8 @@ namespace OOP_EindOpdracht
     class Program
     {
         static void Main(string[] args)
-        {          
-            //Limousine newLimo = AutoAdministratie.AddLimousine("Volvo", "Truck7", 2001, "72-NS-HH", 0, true);
+        {
+            //Limousine newLimo = AutoAdministratie.AddLimousine("Rolls Royce", "deluxe", 2012, "12-34-56", 0, true);
 
             //Auto[] autos = AutoAdministratie.GetAllAutos();
 
@@ -22,6 +22,7 @@ namespace OOP_EindOpdracht
             //{
             //    Console.WriteLine("No autos in Database");
             //}
+
             Console.WriteLine("Press enter to create new Truck");
             Console.ReadLine();
 

@@ -16,24 +16,12 @@ namespace OOP_EindOpdracht.Classes
 
             if (conn.State == ConnectionState.Open)
             {
-                //Insert data into Autos table
-                string query = "INSERT INTO Autos(Maker, Model, Bouwjaar, Kenteken, KilometerTelling, AutoType) VALUES ('" + maker + "', '" + model + "', " + bouwjaar + ", '" + kenteken + "', " + kilometerTelling + ", " + 0 + ")";
-                MySqlCommand cmd = new MySqlCommand(query, conn);
-                cmd.ExecuteNonQuery();
-
-                //Get ID of the inserted row
-                query = "SELECT LAST_INSERT_ID()";
-                cmd = new MySqlCommand(query, conn);
-                MySqlDataReader dataReader = cmd.ExecuteReader();
-
-                //Cache ID
-                dataReader.Read();
-                int ID = dataReader.GetInt32(0);
-                dataReader.Close();
+                //Add auto to main db and return its ID
+                int ID = AddNewAuto(maker, model, bouwjaar, kenteken, kilometerTelling);
 
                 //Insert data into Trucks table
-                query = "INSERT INTO Trucks VALUES(" + ID + ", " + sleepTouw + ")";
-                cmd = new MySqlCommand(query, conn);
+                string query = "INSERT INTO Trucks VALUES(" + ID + ", " + sleepTouw + ")";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
                 cmd.ExecuteNonQuery();
 
                 conn.Close();
@@ -52,25 +40,12 @@ namespace OOP_EindOpdracht.Classes
 
             if (conn.State == ConnectionState.Open)
             {
-                //Insert data into Autos table
-                string query = "INSERT INTO Autos(Maker, Model, Bouwjaar, Kenteken, KilometerTelling, AutoType) VALUES ('" + maker + "', '" + model + "', " + bouwjaar + ", '" + kenteken + "', " + kilometerTelling + ", " + 1 + ")";
-                MySqlCommand cmd = new MySqlCommand(query, conn);
-                cmd.ExecuteNonQuery();
-
-                //Get ID of the inserted row
-                query = "SELECT LAST_INSERT_ID()";
-                cmd = new MySqlCommand(query, conn);
-                MySqlDataReader dataReader = cmd.ExecuteReader();
-
-                //Cache ID
-                dataReader.Read();
-                int ID = dataReader.GetInt32(0);
-                dataReader.Close();
+                //Add auto to main db and return its ID
+                int ID = AddNewAuto(maker, model, bouwjaar, kenteken, kilometerTelling);
 
                 //Insert data into Limousines table
-                query = "INSERT INTO Limousines VALUES(" + ID + ", " + minibar + ")";
-                dataReader.Close();
-                cmd = new MySqlCommand(query, conn);
+                string query = "INSERT INTO Limousines VALUES(" + ID + ", " + minibar + ")";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
                 cmd.ExecuteNonQuery();
 
                 conn.Close();
@@ -301,6 +276,27 @@ namespace OOP_EindOpdracht.Classes
             }
 
             return conn;
+        }
+        private static int AddNewAuto(string maker, string model, int bouwjaar, string kenteken, float kilometerTelling)
+        {
+            MySqlConnection conn = GetConnection();
+
+            //Insert data into Autos table
+            string query = "INSERT INTO Autos(Maker, Model, Bouwjaar, Kenteken, KilometerTelling, AutoType) VALUES ('" + maker + "', '" + model + "', " + bouwjaar + ", '" + kenteken + "', " + kilometerTelling + ", " + 0 + ")";
+            MySqlCommand cmd = new MySqlCommand(query, conn);
+            cmd.ExecuteNonQuery();
+
+            //Get ID of the inserted row
+            query = "SELECT LAST_INSERT_ID()";
+            cmd = new MySqlCommand(query, conn);
+            MySqlDataReader dataReader = cmd.ExecuteReader();
+
+            //Cache ID
+            dataReader.Read();
+            int ID = dataReader.GetInt32(0);
+            dataReader.Close();
+
+            return ID;
         }
         #endregion
     }
