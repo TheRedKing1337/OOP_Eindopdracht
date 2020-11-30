@@ -296,6 +296,8 @@ namespace OOP_EindOpdracht.Classes
             int ID = dataReader.GetInt32(0);
             dataReader.Close();
 
+            conn.Close();                
+
             return ID;
         }
         #endregion
